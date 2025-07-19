@@ -3,5 +3,10 @@
     "source": "quay.io/argoproj/argocd:v3.0.11",
     "destination": "489721517942.dkr.ecr.eu-central-1.amazonaws.com/argoproj/argocd:v3.0.11",
     "architecture": "linux/arm64"
+  },
+  {
+    "source": "ecr-public.aws.com/docker/library/redis:7.2.8-alpine",
+    "destination": "489721517942.dkr.ecr.eu-central-1.amazonaws.com/docker/library/redis:7.2.8-alpine",
+    "architecture": "linux/arm64"
   }
 ]
