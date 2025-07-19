@@ -35,7 +35,7 @@ jobs:
 
       - name: Portage Image Sync
         id: portage
-        uses: monkescience/portage-action@v0.2.0
+        uses: monkescience/portage-action@v0.3.0
         with:
           images-file: ${{ inputs.region }}-${{ inputs.environment }}.json
 
