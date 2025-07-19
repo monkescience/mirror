@@ -1,7 +1,14 @@
-name: Portage Image Sync Workflow
-
 on:
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      region:
+        description: 'AWS region to mirror images to'
+        required: true
+        type: string
+      environment:
+        description: 'Environment to mirror images to'
+        required: true
+        type: string
 
 permissions:
   id-token: write
@@ -10,12 +17,16 @@ permissions:
 jobs:
   sync-images:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.region }}-${{ inputs.environment }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4
         with:
           role-to-assume: ${{ vars.AWS_GITHUB_IAM_ROLE_ARN }}
-          aws-region: eu-central-1
+          aws-region: ${{ inputs.region }}
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2
@@ -24,15 +35,9 @@ jobs:
 
       - name: Portage Image Sync
         id: portage
-        uses: monkescience/portage@b2ec9cb0518d2865424b29575bd29d9c55c5052d
+        uses: monkescience/portage-action@f0c76792d85addeb97e0f4b068f559d446c49aa9
         with:
-          images: |
-            [
-              {
-                "source": "quay.io/argoproj/argocd:v3.0.11",
-                "target": "387105013966.dkr.ecr.eu-central-1.amazonaws.com/argoproj/argocd:v3.0.11"
-              }
-            ]
+          images-file: ${{ inputs.region }}-${{ inputs.environment }}.json
 
       - name: Output results
         run: |

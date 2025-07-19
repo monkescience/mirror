@@ -1,0 +1,11 @@
+name: Mirror Images to eu-central-1-dev
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/mirror-images.yaml
+    with:
+      region: eu-central-1
+      environment: dev
