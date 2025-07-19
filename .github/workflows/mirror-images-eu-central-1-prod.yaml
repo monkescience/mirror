@@ -1,7 +1,11 @@
-name: Mirror Images to eu-central-1-dev
+name: Mirror Images to eu-central-1-prod
 
 on:
   workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   deploy:

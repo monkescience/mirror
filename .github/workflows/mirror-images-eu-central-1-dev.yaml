@@ -3,6 +3,10 @@ name: Mirror Images to eu-central-1-dev
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy:
     uses: ./.github/workflows/mirror-images.yaml
