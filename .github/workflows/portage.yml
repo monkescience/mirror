@@ -1,0 +1,37 @@
+name: Portage Image Sync Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_GITHUB_IAM_ROLE_ARN }}
+          aws-region: eu-central-1
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'true'
+
+      - name: Portage Image Sync
+        id: portage
+        uses: monkescience/portage@b2ec9cb0518d2865424b29575bd29d9c55c5052d
+        with:
+          images: |
+            [
+              {
+                "source": "quay.io/argoproj/argocd:v3.0.11",
+                "target": "387105013966.dkr.ecr.eu-central-1.amazonaws.com/argoproj/argocd:v3.0.11"
+              }
+            ]
+
+      - name: Output results
+        run: |
+          echo "Sync Results: ${{ steps.portage.outputs.results }}"
+          echo "Success Count: ${{ steps.portage.outputs.success-count }}"
+          echo "Total Count: ${{ steps.portage.outputs.total-count }}"
