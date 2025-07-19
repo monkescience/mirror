@@ -3,6 +3,10 @@ name: Portage Image Sync Workflow
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   sync-images:
     runs-on: ubuntu-latest
